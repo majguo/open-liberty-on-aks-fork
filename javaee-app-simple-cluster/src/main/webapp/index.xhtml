@@ -27,6 +27,13 @@
 			<h3>
 				<h:outputText value="#{messages.ourMenu}" />
 			</h3>
+
+            <h3>
+
+              Session entry count: <h:outputText value="#{cafe.sessionEntryCount}" />
+
+			</h3>
+
 			<h:dataTable id="coffeeList" value="#{cafe.coffeeList}" border="1"
 				var="coffee" styleClass="table">
 				<h:column>

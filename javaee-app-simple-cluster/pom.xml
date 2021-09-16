@@ -31,6 +31,61 @@
       <version>2.3.1</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+       <groupId>org.redisson</groupId>
+       <artifactId>redisson</artifactId>
+       <version>3.15.4</version>
+    </dependency>
+    <dependency>
+       <groupId>io.projectreactor</groupId>
+       <artifactId>reactor-core</artifactId>
+       <version>3.4.4</version>
+    </dependency>
+    <dependency>
+       <groupId>org.reactivestreams</groupId>
+       <artifactId>reactive-streams</artifactId>
+       <version>1.0.3</version>
+    </dependency>
+    <dependency>
+       <groupId>io.reactivex.rxjava3</groupId>
+       <artifactId>rxjava</artifactId>
+       <version>3.0.12</version>
+    </dependency>
+    <dependency>
+       <groupId>org.jboss.marshalling</groupId>
+       <artifactId>jboss-marshalling-river</artifactId>
+       <version>2.0.11.Final</version>
+    </dependency>
+    <dependency>
+       <groupId>org.jboss.marshalling</groupId>
+       <artifactId>jboss-marshalling</artifactId>
+       <version>2.0.11.Final</version>
+    </dependency>
+    <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-api</artifactId>
+       <version>1.7.30</version>
+    </dependency>
+    <dependency>
+       <groupId>org.yaml</groupId>
+       <artifactId>snakeyaml</artifactId>
+       <version>1.27</version>
+    </dependency>
+    <dependency>
+       <groupId>net.bytebuddy</groupId>
+       <artifactId>byte-buddy</artifactId>
+       <version>1.10.14</version>
+    </dependency>
+    <dependency>
+       <groupId>org.jodd</groupId>
+       <artifactId>jodd-bean</artifactId>
+       <version>5.1.6</version>
+    </dependency>
+    <dependency>
+       <groupId>org.jodd</groupId>
+       <artifactId>jodd-core</artifactId>
+       <version>5.1.6</version>
+    </dependency>
   </dependencies>
   <build>
     <finalName>${project.artifactId}</finalName>
@@ -47,7 +102,7 @@
           <plugin>
             <groupId>io.openliberty.tools</groupId>
             <artifactId>liberty-maven-plugin</artifactId>
-            <version>3.2</version>
+            <version>3.3.4</version>
             <executions>
               <execution>
                 <id>package-server</id>
@@ -59,6 +114,74 @@
                 </goals>
                 <configuration>
                   <libertyRuntimeVersion>[20.0.0.1,)</libertyRuntimeVersion>
+                  <copyDependencies>
+                    <dependency>
+                      <groupId>org.redisson</groupId>
+                      <artifactId>redisson</artifactId>
+                      <version>3.15.4</version>
+                    </dependency>      
+                    <dependency>
+                      <groupId>org.redisson</groupId>
+                      <artifactId>redisson</artifactId>
+                      <version>3.15.4</version>
+                    </dependency>
+                    <dependency>
+                      <groupId>io.projectreactor</groupId>
+                      <artifactId>reactor-core</artifactId>
+                      <version>3.4.4</version>
+                    </dependency>
+                    <dependency>
+                      <groupId>io.projectreactor</groupId>
+                      <artifactId>reactor-core</artifactId>
+                      <version>3.4.4</version>
+                    </dependency>
+                    <dependency>
+                      <groupId>org.reactivestreams</groupId>
+                      <artifactId>reactive-streams</artifactId>
+                      <version>1.0.3</version>
+                    </dependency>
+                    <dependency>
+                      <groupId>io.reactivex.rxjava3</groupId>
+                      <artifactId>rxjava</artifactId>
+                      <version>3.0.12</version>
+                    </dependency>
+                    <dependency>
+                      <groupId>org.jboss.marshalling</groupId>
+                      <artifactId>jboss-marshalling-river</artifactId>
+                      <version>2.0.11.Final</version>
+                    </dependency>
+                    <dependency>
+                      <groupId>org.jboss.marshalling</groupId>
+                      <artifactId>jboss-marshalling</artifactId>
+                      <version>2.0.11.Final</version>
+                    </dependency>
+                    <dependency>
+                      <groupId>org.slf4j</groupId>
+                      <artifactId>slf4j-api</artifactId>
+                      <version>1.7.30</version>
+                    </dependency>
+                    <dependency>
+                      <groupId>org.yaml</groupId>
+                      <artifactId>snakeyaml</artifactId>
+                      <version>1.27</version>
+                    </dependency>
+                    <dependency>
+                      <groupId>net.bytebuddy</groupId>
+                      <artifactId>byte-buddy</artifactId>
+                      <version>1.10.14</version>
+                    </dependency>
+                    <dependency>
+                      <groupId>org.jodd</groupId>
+                      <artifactId>jodd-bean</artifactId>
+                      <version>5.1.6</version>
+                    </dependency>
+                    <dependency>
+                      <groupId>org.jodd</groupId>
+                      <artifactId>jodd-core</artifactId>
+                      <version>5.1.6</version>
+                    </dependency>
+                    <location>${project.build.directory}/liberty/wlp/usr/shared/resources</location>
+                  </copyDependencies>
                   <outputDirectory>${project.build.directory}/wlp-package</outputDirectory>
                 </configuration>
               </execution>

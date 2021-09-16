@@ -3,8 +3,11 @@ package cafe.web.view;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +62,10 @@ public class Cafe implements Serializable {
         return System.getenv("HOSTNAME");
     }
 
+	public String getSessionEntryCount() {
+		return "" + FacesContext.getCurrentInstance().getExternalContext().getSessionMap().size();
+	}
+
 	@PostConstruct
 	private void init() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
@@ -79,7 +86,11 @@ public class Cafe implements Serializable {
 		this.client.target(baseUri).request(MediaType.APPLICATION_JSON).post(Entity.json(coffee));
 		this.name = null;
 		this.price = null;
-		FacesContext.getCurrentInstance().getExternalContext().redirect("");
+		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+		Map<String, Object> sessionMap = ec.getSessionMap();
+	    sessionMap.put("" + System.currentTimeMillis(), coffee.toString());
+
+		ec.redirect("");
 	}
 
 	public void removeCoffee(String coffeeId) throws IOException {
