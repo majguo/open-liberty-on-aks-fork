@@ -21,9 +21,9 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <param.login.server>${env.LOGIN_SERVER}</param.login.server>
     <param.registry.name>${env.REGISTRY_NAME}</param.registry.name>
-    <param.password>${env.PASSWORD}</param.password>
-    <param.pull.secret.name>acr-secret</param.pull.secret.name>
     <param.user.name>${env.USER_NAME}</param.user.name>
+    <param.password>${env.PASSWORD}</param.password>
+    <param.pull.secret.name>${env.PULL_SECRET_NAME}</param.pull.secret.name>
     <param.replicas>3</param.replicas>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -50,7 +50,7 @@
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
       </resource>
-    </resources>        
+    </resources>
     <finalName>${project.artifactId}</finalName>
     <plugins>
       <plugin>
@@ -65,13 +65,13 @@
             </goals>
             <configuration>
               <outputDirectory>${basedir}/target</outputDirectory>
-              <resources>          
+              <resources>
                 <resource>
                   <directory>src/main/docker</directory>
                   <filtering>true</filtering>
                 </resource>
-              </resources>              
-            </configuration>            
+              </resources>
+            </configuration>
           </execution>
           <execution>
             <id>02-aks-config</id>
@@ -81,13 +81,13 @@
             </goals>
             <configuration>
               <outputDirectory>${basedir}/target</outputDirectory>
-              <resources>          
+              <resources>
                 <resource>
                   <directory>src/main/aks</directory>
                   <filtering>true</filtering>
                 </resource>
-              </resources>              
-            </configuration>            
+              </resources>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -117,7 +117,6 @@
       </plugin>
     </plugins>
   </build>
-
 
   <profiles>
     <profile>
@@ -172,9 +171,9 @@
                   <goal>exec</goal>
                 </goals>
                 <configuration>
-                  <workingDirectory>${project.build.directory}/..</workingDirectory>
+                  <workingDirectory>${project.build.directory}</workingDirectory>
                   <executable>kubectl</executable>
-                  <commandlineArgs>apply -f ${project.build.directory}/openlibertyapplication.yaml</commandlineArgs>
+                  <commandlineArgs>apply -f openlibertyapplication.yaml</commandlineArgs>
                 </configuration>
               </execution>
             </executions>
@@ -183,5 +182,5 @@
       </build>
     </profile>
   </profiles>
-  
+
 </project>
