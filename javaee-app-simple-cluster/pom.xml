@@ -17,6 +17,8 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
     <failOnMissingWebXml>false</failOnMissingWebXml>
+    <singleServerConfig.password>${env.REDISCACHEKEY}</singleServerConfig.password>
+    <singleServerConfig.address>rediss://${env.REDISCACHEHOSTNAME}:6380</singleServerConfig.address>
   </properties>
   <dependencies>
     <dependency>
@@ -98,6 +100,28 @@
       </activation>
       <build>
         <plugins>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+              <execution>
+                <id>01-redisson-config</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/liberty/wlp/usr/shared/resources</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>src/main/redisson</directory>
+                      <filtering>true</filtering>
+                      </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
           <!-- Enable liberty-maven-plugin -->
           <plugin>
             <groupId>io.openliberty.tools</groupId>
