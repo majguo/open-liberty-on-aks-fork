@@ -5,7 +5,7 @@ FROM openliberty/open-liberty:kernel-java8-openj9-ubi
 COPY --chown=1001:0 src/main/liberty/config/server.xml /config/server.xml
 COPY --chown=1001:0 src/main/liberty/config/redisson-jcache.yaml /config/redisson-jcache.yaml
 COPY --chown=1001:0 target/javaee-cafe.war /config/apps/
-COPY --chown=1001:0 target/javaee-cafe/WEB-INF/lib/redisson-3.15.4.jar /opt/ol/wlp/usr/shared/resources/
+COPY --chown=1001:0 target/javaee-cafe/WEB-INF/lib/redisson-3.16.3.jar /opt/ol/wlp/usr/shared/resources/
 COPY --chown=1001:0 target/javaee-cafe/WEB-INF/lib/byte-buddy-1.10.14.jar /opt/ol/wlp/usr/shared/resources/
 COPY --chown=1001:0 target/javaee-cafe/WEB-INF/lib/cache-api-1.0.0.jar /opt/ol/wlp/usr/shared/resources/
 COPY --chown=1001:0 target/javaee-cafe/WEB-INF/lib/jackson-annotations-2.12.1.jar /opt/ol/wlp/usr/shared/resources/

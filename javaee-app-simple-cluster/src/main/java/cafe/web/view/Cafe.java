@@ -25,76 +25,76 @@ import cafe.model.entity.Coffee;
 @RequestScoped
 public class Cafe implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String baseUri;
-	private transient Client client;
+    private String baseUri;
+    private transient Client client;
 
-	@NotNull
-	@NotEmpty
-	protected String name;
-	@NotNull
-	protected Double price;
-	protected List<Coffee> coffeeList;
+    @NotNull
+    @NotEmpty
+    protected String name;
+    @NotNull
+    protected Double price;
+    protected List<Coffee> coffeeList;
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Double getPrice() {
-		return price;
-	}
+    public Double getPrice() {
+        return price;
+    }
 
-	public void setPrice(Double price) {
-		this.price = price;
-	}
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
-	public List<Coffee> getCoffeeList() {
-		this.getAllCoffees();
-		return coffeeList;
-	}
+    public List<Coffee> getCoffeeList() {
+        this.getAllCoffees();
+        return coffeeList;
+    }
 
     public String getHostName() {
         return System.getenv("HOSTNAME");
     }
 
-	public String getSessionEntryCount() {
-		return "" + FacesContext.getCurrentInstance().getExternalContext().getSessionMap().size();
-	}
+    public String getSessionEntryCount() {
+        return "" + FacesContext.getCurrentInstance().getExternalContext().getSessionMap().size();
+    }
 
-	@PostConstruct
-	private void init() {
+    @PostConstruct
+    private void init() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
                 .getRequest();
 
         baseUri = "http://localhost:9080" + request.getContextPath() + "/rest/coffees";
         this.client = ClientBuilder.newBuilder().build();
-	}
+    }
 
-	private void getAllCoffees() {
-		this.coffeeList = this.client.target(this.baseUri).path("/").request(MediaType.APPLICATION_JSON)
-				.get(new GenericType<List<Coffee>>() {
-				});
-	}
+    private void getAllCoffees() {
+        this.coffeeList = this.client.target(this.baseUri).path("/").request(MediaType.APPLICATION_JSON)
+                .get(new GenericType<List<Coffee>>() {
+                });
+    }
 
-	public void addCoffee() throws IOException {
-		Coffee coffee = new Coffee(this.name, this.price);
-		this.client.target(baseUri).request(MediaType.APPLICATION_JSON).post(Entity.json(coffee));
-		this.name = null;
-		this.price = null;
-		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-		Map<String, Object> sessionMap = ec.getSessionMap();
-	    sessionMap.put("" + System.currentTimeMillis(), coffee.toString());
+    public void addCoffee() throws IOException {
+        Coffee coffee = new Coffee(this.name, this.price);
+        this.client.target(baseUri).request(MediaType.APPLICATION_JSON).post(Entity.json(coffee));
+        this.name = null;
+        this.price = null;
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        Map<String, Object> sessionMap = ec.getSessionMap();
+        sessionMap.put("" + System.currentTimeMillis(), coffee.toString());
 
-		ec.redirect("");
-	}
+        ec.redirect("");
+    }
 
-	public void removeCoffee(String coffeeId) throws IOException {
-		this.client.target(baseUri).path(coffeeId).request().delete();
-		FacesContext.getCurrentInstance().getExternalContext().redirect("");
-	}
+    public void removeCoffee(String coffeeId) throws IOException {
+        this.client.target(baseUri).path(coffeeId).request().delete();
+        FacesContext.getCurrentInstance().getExternalContext().redirect("");
+    }
 }
