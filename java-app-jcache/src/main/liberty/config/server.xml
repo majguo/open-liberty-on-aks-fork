@@ -9,6 +9,7 @@
         <feature>restfulWS-3.1</feature>
         <feature>sessionCache-1.0</feature>
         <feature>xmlBinding-4.0</feature>
+        <feature>servlet-6.0</feature>
     </featureManager>
 
     <!-- Define http & https endpoints -->
@@ -35,4 +36,6 @@
     <webApplication id="javaee-cafe-jcache" contextRoot="/"
                     location="${server.config.dir}/apps/javaee-cafe-jcache.war">
     </webApplication>
+
+    <logging traceSpecification="*=info:com.ibm.ws.session.store.cache.*=all"/>
 </server>

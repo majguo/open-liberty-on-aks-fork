@@ -20,7 +20,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <registry.login.server>${env.LOGIN_SERVER}</registry.login.server>
         <!-- redisson configuration -->
-        <singleServerConfig.address>rediss://${env.REDIS_CACHE_ENDPOINT}</singleServerConfig.address>
+        <singleServerConfig.address>redis://${env.REDIS_CACHE_ENDPOINT}</singleServerConfig.address>
         <singleServerConfig.password>${env.REDIS_CACHE_KEY}</singleServerConfig.password>
     </properties>
 
