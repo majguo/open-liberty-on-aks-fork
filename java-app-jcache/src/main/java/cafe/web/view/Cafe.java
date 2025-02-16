@@ -1,12 +1,13 @@
 package cafe.web.view;
 
 import java.io.IOException;
+//import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
@@ -22,12 +23,12 @@ import jakarta.ws.rs.core.MediaType;
 import cafe.model.entity.Coffee;
 
 @Named
-@RequestScoped
+@SessionScoped
 public class Cafe implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String baseUri;
+    private transient String baseUri;
     private transient Client client;
 
     @NotNull
@@ -35,22 +36,26 @@ public class Cafe implements Serializable {
     protected String name;
     @NotNull
     protected Double price;
-    protected Long submitCount;
-    protected List<Coffee> coffeeList;
+
+    protected transient List<Coffee> coffeeList;
 
     public String getName() {
+        System.out.println("Getting name " + name);
         return name;
     }
 
     public void setName(String name) {
+        System.out.println("Setting name to " + name);
         this.name = name;
     }
 
     public Double getPrice() {
+        System.out.println("Getting price " + price);
         return price;
     }
 
     public void setPrice(Double price) {
+        System.out.println("Setting price to " + price);
         this.price = price;
     }
 
@@ -63,10 +68,6 @@ public class Cafe implements Serializable {
         return System.getenv("HOSTNAME");
     }
 
-    public Long getSubmitCount() {
-        return submitCount;
-    }
-
     @PostConstruct
     private void init() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
@@ -74,11 +75,6 @@ public class Cafe implements Serializable {
 
         baseUri = "http://localhost:9080" + request.getContextPath() + "/rest/coffees";
         this.client = ClientBuilder.newBuilder().build();
-
-        Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-        this.name = (String) sessionMap.get("newCoffeeName");
-        this.price = (Double) sessionMap.get("newCoffeePrice");
-        this.submitCount =  sessionMap.containsKey("newCoffeeSubmitCount") ? (Long) sessionMap.get("newCoffeeSubmitCount") : 0;
     }
 
     private void getAllCoffees() {
@@ -88,20 +84,25 @@ public class Cafe implements Serializable {
     }
 
     public void addCoffee() throws IOException {
-        Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-        sessionMap.put("newCoffeeName", this.name);
-        sessionMap.put("newCoffeePrice", this.price);
-        sessionMap.put("newCoffeeSubmitCount", ++this.submitCount);
-
         Coffee coffee = new Coffee(this.name, this.price);
-        coffee.setId(this.submitCount);
-        sessionMap.put("newCoffee", coffee.toString());
-
+        this.client.target(baseUri).request(MediaType.APPLICATION_JSON).post(Entity.json(coffee));
         FacesContext.getCurrentInstance().getExternalContext().redirect("");
     }
 
     public void removeCoffee(String coffeeId) throws IOException {
         this.client.target(baseUri).path(coffeeId).request().delete();
         FacesContext.getCurrentInstance().getExternalContext().redirect("");
+    }
+
+    // private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+    //     // read object and log the objects
+    //     ois.defaultReadObject();
+    //     System.out.println("Deserialized object: " + this);
+    //     init();
+    // }
+
+    private Object readResolve() {
+        init();
+        return this;
     }
 }
