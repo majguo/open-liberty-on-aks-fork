@@ -11,10 +11,9 @@
         <h:form>
             <h:outputLabel for="name" value="Coffee name: " />
             <h:inputText id="name" value="#{cafe.name}" />
-            <h:commandButton value="Submit" action="#{cafe.submit}" />
+            <h:commandButton value="Submit" action="index?faces-redirect=true" />
         </h:form>
         <h:outputText value="Coffee from session-scoped bean: #{cafe.name}" />
         <br />
-        <h:outputText value="Coffee from session: #{cafe.nameFromSession}" />
     </h:body>
 </html>
