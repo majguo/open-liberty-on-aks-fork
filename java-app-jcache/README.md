@@ -77,3 +77,42 @@ The name you set in the previous session should be retrieved back from the Redis
 ![Application](./images/app-home-page.png)
 
 This may be an issue with Open Liberty's JCache session persistence feature when using `SessionScoped` CDI beans.
+
+### Testing the session cache with servlet
+
+To further triage the issue, two servlets are added to the application to test the session cache with servlets and session scoped CDI beans:
+
+* `SetNameServlet`: Set the name of the coffee into session-scoped CDI bean `Cafe`. The endpoint is `http://localhost:9080/set-name?name=<coffee-name>`.
+* `GetNameServlet`: Get the name of the coffee from session-scoped CDI bean `Cafe`. The endpoint is `http://localhost:9080/get-name`.
+
+First, stop the application by pressing `Ctrl+C` in the terminal. Then, build and start the application again:
+
+```bash
+mvn clean package
+mvn -Predisson validate
+mvn dependency:copy-dependencies -f pom-redisson.xml -DoutputDirectory=target/liberty/wlp/usr/shared/resources
+mvn liberty:dev
+```
+
+To initiate a new session, open another browser or close and reopen the current browser. Then, open a new tab in the browser and navigate to `http://localhost:9080/set-name?name=latte` to set the name of the coffee as `latte`.
+You should be redirected to the `http://localhost:9080/get-name` page and see the name of the coffee displayed as `latte`:
+
+![Application](./images/app-get-name-servlet.png)
+
+Stop and start the app again, and switch back to the browser tab that is open at `http://localhost:9080/get-name`. The name of the coffee should still be displayed as `latte`:
+
+![Application](./images/app-get-name-servlet.png)
+
+It's good to see that the session data is persisted in the Redis cache and retrieved back **at the first time** you updated the session-scoped bean `Cafe` using the servlets.
+
+Then, open a new tab in the browser and navigate to `http://localhost:9080/set-name?name=americano` to update the name of the coffee to `americano`. You should be redirected to the `http://localhost:9080/get-name` page and see the name of the coffee displayed as `americano`:
+
+![Application](./images/app-get-name-servlet-2.png)
+
+Stop and start the app again, and switch back to the browser tab that is open at `http://localhost:9080/get-name`. The name of the coffee should be displayed as `americano`, however, it's observed that the name is still displayed as `latte`:
+
+![Application](./images/app-get-name-servlet.png)
+
+It turns out that the name of the coffee from the session-scoped bean `Cafe` is not persisted in the Redis cache **starting from the second time** you updated the session-scoped bean `Cafe` using the servlets.
+
+This is another issue with Open Liberty's JCache session persistence feature when using `SessionScoped` CDI beans and servlets.
